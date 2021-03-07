@@ -2,10 +2,10 @@
 Allows to load statistic information about application in Google Play Store.
 
 This repo has 2 microservices:
-1) http REST API with 2 endpoints:
+1) REST API with 2 endpoints:
  - GET /app?id={id} allows to get information from database about already exists application by its local uniq id
  - POST /app?URL={url} allows to add information about application in database by application's url in Google Play Store
-2) gRPC REST API Service that has one rpc method "getStatistic" for loading information about application from Google Play Store
+2) gRPC API Service that has one rpc method "getStatistic" for loading information about application from Google Play Store
 
 ---> Task Description: <---
 
