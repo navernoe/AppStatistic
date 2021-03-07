@@ -1,8 +1,7 @@
 ﻿using System;
-
 using AppStatisticGrpc.Interface;
 
-namespace AppStatisticGrpc
+namespace AppStatisticGrpc.Models
 {
     [Serializable]
     public class AppStatistic: IAppStatistic

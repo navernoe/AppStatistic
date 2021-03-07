@@ -51,7 +51,7 @@ namespace AppStatisticApi.Repository
             return app;
         }
 
-        public async void update(AppEntity app, Dictionary<string, string> fieldValues)
+        public async Task update(AppEntity app, Dictionary<string, string> fieldValues)
         {
             Type appType = app.GetType();
 

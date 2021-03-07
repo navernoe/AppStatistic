@@ -2,10 +2,9 @@
 using System.Net;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using AppStatisticGrpc.Exceptions;
 
-namespace AppStatisticGrpc
+namespace AppStatisticGrpc.Utils
 {
 
     public class GooglePlayAppDataScrapper
