@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  db:
+    image: navernoe/appstatistic:pg
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 123123123
+      PGDATA: postgres
+  api:
+    image: navernoe/appstatistic:api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - grpc-app
+    environment:
+      ASPNETCORE_URLS: http://+:5000
+  grpc-app:
+    image: navernoe/appstatistic:grpc
+    ports:
+      - "5002:5002"
+    environment:
+      ASPNETCORE_URLS: http://+:5002
