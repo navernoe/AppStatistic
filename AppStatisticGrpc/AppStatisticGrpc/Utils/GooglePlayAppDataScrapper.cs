@@ -37,30 +37,42 @@ namespace AppStatisticGrpc.Utils
 
         public string getDownloadsStatistic()
         {
+            string downloadsValue = "";
             string downloadsPattern = "Downloaded\\s(?<downloads>(\\d)*)\\s";
             Regex downloadsRegex = new Regex(downloadsPattern);
             Match downloadsMatch = downloadsRegex.Match(html);
 
-            string downloadsValue = (
+            var downloadsList = (
                 from Group g in downloadsMatch.Groups
                 where g.Name == "downloads"
                 select g.Value
-            ).ElementAt(0);
+            );
+
+            if (downloadsList.Count() > 0)
+            {
+                downloadsValue = downloadsList.ElementAt(0);
+            }
 
             return downloadsValue;
         }
 
         public string getAppName()
         {
+            string nameValue = "";
             string namePattern = "(itemprop=\\\"name\\\">(\\s)*<span(\\s)*>)(?<name>([^<])*)";
             Regex nameRegex = new Regex(namePattern);
             Match nameMatch = nameRegex.Match(html);
 
-            string nameValue = (
+            var namesList = (
                 from Group g in nameMatch.Groups
                 where g.Name == "name"
                 select g.Value
-            ).ElementAt(0);
+            );
+
+            if (namesList.Count() > 0)
+            {
+                nameValue = namesList.ElementAt(0);
+            }
 
             return nameValue;
         }
