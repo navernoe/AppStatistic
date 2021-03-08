@@ -7,15 +7,23 @@ using Microsoft.Extensions.Logging;
 using AppStatisticGrpc.Exceptions;
 using AppStatisticGrpc.Utils;
 using AppStatisticGrpc.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace AppStatisticGrpc
 {
     public class AppStatisticLoaderService : AppStatisticLoader.AppStatisticLoaderBase
     {
         private readonly ILogger<AppStatisticLoaderService> _logger;
-        public AppStatisticLoaderService(ILogger<AppStatisticLoaderService> logger)
+        private readonly IConfiguration _config;
+        private string apiUrl;
+        public AppStatisticLoaderService(
+            ILogger<AppStatisticLoaderService> logger,
+            IConfiguration configuration
+        )
         {
+            _config = configuration;
             _logger = logger;
+            apiUrl = _config.GetValue<string>("Dependencies:AppStatisticApiHost");
         }
 
         public async override Task<AppReply> getStatistic(AppRequest request, ServerCallContext context)
@@ -51,9 +59,9 @@ namespace AppStatisticGrpc
         private async Task<AppStatistic> getAppById(int id)
         {
             string appInfo = "";
-            string apiUrl = "https://localhost:5001/app?id=" + id;
+            string apiQuery = apiUrl + "/app?id=" + id;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiQuery);
             HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
             using (Stream stream = response.GetResponseStream())
             {
