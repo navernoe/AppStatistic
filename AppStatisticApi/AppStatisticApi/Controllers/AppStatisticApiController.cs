@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Text.Json;
 using System.Web;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using AppStatisticApi.Storage;
 using AppStatisticApi.Storage.Entities;
 using AppStatisticApi.Grpc;
 using AppStatisticApi.Exceptions;
+using AppStatisticApi.Utils;
 
 namespace AppStatisticApi.Controllers
 {
@@ -49,7 +51,15 @@ namespace AppStatisticApi.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Post(string url)
         {
+            url = this.tryValidate(url);
+
+            if (String.IsNullOrEmpty(url))
+            {
+                return BadRequest("Неверная ссылка на приложение в Google Play");
+            }
+
             ActionResult<AppEntity> appActionResult = null;
+
             try
             {
                 appActionResult = await appRepository.create
@@ -71,6 +81,22 @@ namespace AppStatisticApi.Controllers
             string appJson = JsonSerializer.Serialize(app);
 
             return appJson;
+        }
+
+        private string tryValidate(string url)
+        {
+            string validUrl = "";
+
+            try
+            {
+                validUrl = UrlFormatter.validate(url);
+            }
+            catch(ArgumentException e)
+            {
+                return "";
+            }
+
+            return validUrl;
         }
 
         private Dictionary<string, string> getAppStatisticById(int id)
