@@ -51,7 +51,7 @@ namespace AppStatisticApi.Repository
             return app;
         }
 
-        public async Task update(AppEntity app, Dictionary<string, string> fieldValues)
+        public void update(AppEntity app, Dictionary<string, string> fieldValues)
         {
             Type appType = app.GetType();
 
@@ -74,8 +74,8 @@ namespace AppStatisticApi.Repository
                     appProp.SetValue(app, propValue);
                 }
             }
-
-            await db.SaveChangesAsync();
+            db.Applications.Update(app);
+            db.SaveChanges();
         }
     }
 }

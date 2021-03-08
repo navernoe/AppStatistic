@@ -8,6 +8,7 @@ using AppStatisticApi.Repository;
 using AppStatisticApi.Storage;
 using AppStatisticApi.Storage.Entities;
 using AppStatisticApi.Grpc;
+using AppStatisticApi.Exceptions;
 
 namespace AppStatisticApi.Controllers
 {
@@ -39,7 +40,7 @@ namespace AppStatisticApi.Controllers
 
             if (app == null)
             {
-                return NotFound();
+                return NotFound($"Приложение с id = {id} не найдено в БД");
             }
 
             return app;
@@ -48,10 +49,19 @@ namespace AppStatisticApi.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Post(string url)
         {
-            ActionResult<AppEntity> appActionResult = await appRepository.create
-            (
-                 new AppEntity { url = url }
-            );
+            ActionResult<AppEntity> appActionResult = null;
+            try
+            {
+                appActionResult = await appRepository.create
+                (
+                     new AppEntity { url = url }
+                );
+            }
+            catch (AppAlreadyExistsException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             AppEntity app = appActionResult.Value;
             int newId = app.id;
 
