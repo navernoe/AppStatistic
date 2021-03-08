@@ -11,6 +11,7 @@ using AppStatisticApi.Storage.Entities;
 using AppStatisticApi.Grpc;
 using AppStatisticApi.Exceptions;
 using AppStatisticApi.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace AppStatisticApi.Controllers
 {
@@ -23,15 +24,19 @@ namespace AppStatisticApi.Controllers
         private AppStatisticDbContext db;
         private AppRepository appRepository;
         private GrpcClient grpcClient;
+        private IConfiguration config;
 
         public AppStatisticApiController(
             ILogger<AppStatisticApiController> logger,
-            AppStatisticDbContext context
+            AppStatisticDbContext context,
+            IConfiguration configuration
         ) {
+            config = configuration;
             _logger = logger;
             db = context;
             appRepository = new AppRepository(db);
-            grpcClient = new GrpcClient();
+            string grpcHost = config.GetValue<string>("Dependencies:GrpcHost");
+            grpcClient = new GrpcClient(grpcHost);
         }
 
         [HttpGet]

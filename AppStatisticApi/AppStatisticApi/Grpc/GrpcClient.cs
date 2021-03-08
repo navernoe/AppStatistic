@@ -7,13 +7,13 @@ namespace AppStatisticApi.Grpc
     {
         GrpcChannel channel;
         AppStatisticLoader.AppStatisticLoaderClient client;
-        public GrpcClient()
+        public GrpcClient(string grpcHost)
         {
             AppContext.SetSwitch(
                 "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport",
                 true
             );
-            channel = GrpcChannel.ForAddress("http://localhost:5002");
+            channel = GrpcChannel.ForAddress(grpcHost);
             client = new AppStatisticLoader.AppStatisticLoaderClient(channel);
         }
 
